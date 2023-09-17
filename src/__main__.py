@@ -7,7 +7,7 @@ import ylibrary as ylib
 
 def book_db():
     try: 
-        with open('libzzx\libdata.csv', 'r', newline='') as file:
+        with open('ylibrary\libdata.csv', 'r', newline='') as file:
             reader = csv.reader(file, delimiter=';')
             header = next(reader)
             database = {'column' : header}
@@ -22,7 +22,7 @@ def book_db():
 def member_db():
     try:
 
-        with open('libzzx\member.csv', 'r', newline='') as file:
+        with open('ylibrary\member.csv', 'r', newline='') as file:
             reader = csv.reader(file, delimiter=';')
             header = next(reader)
             memberdbase = {'column' : header}
@@ -37,7 +37,7 @@ def member_db():
 def borrow_db(): 
     try:
 
-        with open('libzzx\databorrow.csv', 'r', newline='') as file:
+        with open('ylibrary\databorrow.csv', 'r', newline='') as file:
             reader = csv.reader(file, delimiter=';')
             header = next(reader)
             borrowdb = {'column' : header}
@@ -59,29 +59,46 @@ def main():
 
         print('-------- WELCOME TO Y-LIBRARY --------')
         print('------ let\'s feed your curiosity -----')
+#         print('''          
+# Menu:
+# 1. Search Books
+# 2. Add book data
+# 3. Update book data
+# 4. Delete book data
+# 5. Borrow book
+# 6. Exit''')
         print('''          
 Menu:
 1. Search Books
-2. Add book data
-3. Update book data
-4. Delete book data
-5. Borrow book
-6. Exit
+2. Borrow book
+3. Database Management
+4. Exit
         ''')
         
         choice = pyip.inputStr('Enter the number: ')
 
+        # if choice == '1':
+        #     ylib.search(database)
+        # elif choice == '2':
+        #     ylib.add(database, identity)
+        # elif choice == '3':
+        #     ylib.update(database, identity)
+        # elif choice == '4':
+        #     ylib.delete(database, identity)
+        # elif choice == '5':
+        #     ylib.borrow(database, memberdbase, borrowdb, identity, user_id)
+        # elif choice == '6':
+        #     print('Thank you for visiting Y-Library')
+        #     print('See you next time!')
+        #     break
+
         if choice == '1':
             ylib.search(database)
         elif choice == '2':
-            ylib.add(database, identity)
-        elif choice == '3':
-            ylib.update(database, identity)
-        elif choice == '4':
-            ylib.delete(database, identity)
-        elif choice == '5':
             ylib.borrow(database, memberdbase, borrowdb, identity, user_id)
-        elif choice == '6':
+        elif choice == '3':
+            ylib.database_management(database, memberdbase, identity)
+        elif choice == '4':
             print('Thank you for visiting Y-Library')
             print('See you next time!')
             break

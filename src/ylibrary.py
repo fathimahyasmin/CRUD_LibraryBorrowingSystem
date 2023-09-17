@@ -41,7 +41,7 @@ def registration(memberdbase):
 
             data = [member_id, name.capitalize(), phone_num, email, hold]
             memberdbase.update({f'{member_id}': data})
-            with open('libzzx\member.csv', mode='a', newline='') as file:
+            with open('ylibrary\member.csv', mode='a', newline='') as file:
                     writer = csv.writer(file, delimiter = ';')
                     writer.writerow(data)
 
@@ -268,7 +268,7 @@ Choose the menu:
             save = pyip.inputYesNo("Do you want to save this data? (yes/no): ")
 
             if save == 'yes':
-                with open('libzzx\libdata.csv', mode='a', newline='\n') as file:
+                with open('ylibrary\libdata.csv', mode='a', newline='\n') as file:
                     writer = csv.writer(file, delimiter = ';')
                     writer.writerow(data)
                 print("The input was successful.")
@@ -346,7 +346,7 @@ Select which data you want to update:
                 confirm_save = pyip.inputYesNo('Do you want to save this update? (yes/no): ')
 
                 if confirm_save == 'yes':
-                    with open('libzzx\libdata.csv', 'w', newline='') as file:
+                    with open('ylibrary\libdata.csv', 'w', newline='') as file:
                         writer = csv.writer(file, delimiter=';')
                         writer.writerows(database.values())
                     print('Change saved successfully')
@@ -395,7 +395,7 @@ Choose the menu:
                     del database[book_id]
                     print('Data successfully deleted')
 
-                    with open('libzzx\libdata.csv', 'w', newline='') as file:
+                    with open('ylibrary\libdata.csv', 'w', newline='') as file:
                         writer = csv.writer(file, delimiter=';')
                         writer.writerows(database.values())
                     break
@@ -465,11 +465,11 @@ Choose the menu:
                             data[6] -= 1
                             memberdbase[user_id][4] += 1
 
-                            with open('libzzx\libdata.csv', 'w', newline='') as file:
+                            with open('ylibrary\libdata.csv', 'w', newline='') as file:
                                 writer = csv.writer(file, delimiter=';')
                                 writer.writerows(database.values())
 
-                            with open('libzzx\member.csv', 'w', newline='') as file:
+                            with open('ylibrary\member.csv', 'w', newline='') as file:
                                 writer = csv.writer(file, delimiter=';')
                                 writer.writerows(memberdbase.values())
 
@@ -480,7 +480,7 @@ Choose the menu:
 
                             cart = [entry_num, user_id, book_id, borrow_date, return_date]
 
-                            with open('libzzx\databorrow.csv', 'a', newline='') as file:
+                            with open('ylibrary\databorrow.csv', 'a', newline='') as file:
                                 writer = csv.writer(file, delimiter = ';')
                                 writer.writerow(cart)
                             
@@ -493,7 +493,7 @@ Choose the menu:
         
         elif sub_choice == 2:
             clear_screen()
-            with open('libzzx\libpolicy.txt', 'r') as file:
+            with open('ylibrary\libpolicy.txt', 'r') as file:
                 print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
                 
                 content = file.read()
@@ -502,8 +502,8 @@ Choose the menu:
                 print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
             stay()
         elif sub_choice == 3:
-            ('-------- BORROWING HISTORY --------')
-
+            print('-------- BORROWING HISTORY --------')
+            
             data = []
             header = ['Member ID', 'Name', 'Book Title', 'Borrow Date', 'Return Date']
 
@@ -517,20 +517,189 @@ Choose the menu:
                     data.append(compile)
 
             print(tabulate.tabulate(data, header, tablefmt='grid'))
-           
+            stay()
 
         elif sub_choice == 4:
             break     
 
-                    
-                        
+# search_member()
+# --------------------------------------------------------------------------
+def search_member(memberdbase):
+    while True: 
+        print('---------- MEMBER DATA SEARCH ----------')
+        searchOpts = pyip.inputInt(lessThan=7, prompt='''
+Search options:                                                          
+1.  Search Member ID
+2.  Show All
+3.  Exit                         
+                           
+Enter the menu number: ''')
+        
+        found = False
+        attributes = []
+        
+        if searchOpts == 1:
+            user_id = pyip.inputStr('Enter the member id: ').lower()
 
+            for id, attribute in memberdbase.items():
+                if user_id == memberdbase[id][0].lower():
+                    attributes.append(attribute)
+                    found = True
+    
+            if not found:
+                print(f'{user_id.capitalize()} was not found in database')
+            else:
+                partial_show(attributes, memberdbase)
+                stay()
+        elif searchOpts == 2:
+            show(memberdbase)
+            stay()
+        elif searchOpts == 3:
+            break
+        
+# update_member()
+# --------------------------------------------------------------------------
+def update_member(memberdbase):
+
+    while True:
+        print('-------- UPDATE MEMBER DATA --------')
+        print('''
+Choose the menu:
+1. Update Member Data
+2. Exit
+        ''')
+        sub_choice = pyip.inputInt('Enter the number: ')
+        if sub_choice == 1:
+            while True: 
+                member_id = pyip.inputStr('\nEnter the member ID to update: ').capitalize()
                 
-
-
-                    
+                if member_id not in memberdbase:
+                    print(f'Member ID {member_id} not found in database.')
+                else: 
+                    data = memberdbase[member_id]
+                    print(tabulate.tabulate([data], headers=memberdbase['column'], tablefmt='grid'))
+                    break
             
+            while True:
+                confirm = pyip.inputYesNo("Do you want to continue update? (yes/no): ")
 
+                if confirm == 'no':
+                    break
+                else: 
+                    print('''
+Select which data you want to update: 
+1. Name
+2. Phone Number
+3. Email
+4. Hold
+        ''')
+                updateOpts = pyip.inputStr('Enter the number: ')
+        
+                if updateOpts == '1':
+                    newName = pyip.inputStr('\nEnter new name: ')
+                    data[1] = newName.title()
+                elif updateOpts == '2':
+                    newPhone = pyip.inputInt('\nEnter new phone number: ')
+                    data[2] = newPhone
+                elif updateOpts == '3':
+                    newEmail = pyip.inputEmail('\nEnter new email: ')
+                    data[3] = newEmail
+                elif updateOpts == '4':
+                    newHold = pyip.inputInt('\nEnter new hold status: ')
+                    data[4] = newHold
+        
+                confirm_save = pyip.inputYesNo('Do you want to save this update? (yes/no): ')
 
+                if confirm_save == 'yes':
+                    with open('ylibrary\member.csv', 'w', newline='') as file:
+                        writer = csv.writer(file, delimiter=';')
+                        writer.writerows(memberdbase.values())
+                    print('Change saved successfully')
+                    print(tabulate.tabulate([data], headers=memberdbase['column'], tablefmt='grid'))
+                    break
+                else: 
+                    print("The input was not saved.")
+                    break
+        elif sub_choice == 2:
+            break
 
-                    
+# delete_member()
+# --------------------------------------------------------------------------
+def delete_member(memberdbase):
+    while True:
+        clear_screen()
+        print('-------- DELETE MEMBER DATA --------')
+        print('''
+Choose the menu:
+1. Delete Book Data
+2. Exit
+        ''')
+        sub_choice = pyip.inputInt('Enter the number: ')
+        
+        if sub_choice == 1:
+            while True: 
+                member_id = pyip.inputStr('\nEnter the member ID you want to delete: ').capitalize()
+            
+                if member_id not in memberdbase:
+                    print(f'Member ID {member_id} not found in database.')
+                else: 
+                    data = memberdbase[member_id]
+                    print(tabulate.tabulate([data], headers=memberdbase['column'], tablefmt='grid'))
+                    break
+
+            while True:
+                confirm = pyip.inputYesNo("Do you want to continue delete? (yes/no): ")
+
+                if confirm == 'yes': 
+                    del memberdbase[member_id]
+                    print('Data successfully deleted')
+
+                    with open('ylibrary\member.csv', 'w', newline='') as file:
+                        writer = csv.writer(file, delimiter=';')
+                        writer.writerows(memberdbase.values())
+                    break
+
+                else:
+                    print("Deletion cancelled. No changes were made.")
+                    break
+       
+        elif sub_choice == 2:
+            break
+
+# DATABASE MANAGEMENT
+# --------------------------------------------------------------------------
+def database_management(database, memberdbase, identity):
+
+    if identity != 'admin':
+        print('This menu is for admin only.')
+        return
+    
+    while True: 
+        print('-------- DATABASE MANAGEMENT SYSTEM --------')
+        print('''          
+Menu:
+1. Add book data
+2. Update book data
+3. Delete book data
+4. Search member data
+5. Update member data
+6. Delete member data             
+7. Exit
+        ''')
+        
+        choice = pyip.inputStr('Enter the number: ')
+
+        if choice == '1':
+            add(database)
+        elif choice == '2':
+            update(database)
+        elif choice == '3':
+            delete(database)
+        elif choice == '4':
+            search_member(memberdbase)
+        elif choice == '5':
+            update_member(memberdbase)
+        elif choice == '6':
+            delete_member(memberdbase)
+        elif choice == '7':
+            break
