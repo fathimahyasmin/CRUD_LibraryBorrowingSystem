@@ -1,0 +1,48 @@
+LIBRARY BOOK BORROWING POLICY
+------------------------------
+
+BORROWING PERIOD:
+---------------------------
+- The standard borrowing period for books in our library is 7 days.
+
+BORROWER ELIGIBILITY:
+---------------------------
+- Any registered member of our library is eligible to borrow books.
+
+BORROWING LIMITS:
+---------------------------
+- Each member is allowed to borrow a maximum of 3 books at a time.
+
+RENEWAL:
+---------------------------
+- Books can be renewed for an additional 7 days if there are no holds on them. 
+- Members can request a renewal in person or through our online portal.
+
+HOLDS:
+---------------------------
+- If a book is currently checked out, members can place a hold on it. 
+- Once returned, the book will be held for the member who placed the hold for 48 hours.
+
+RETURNS:
+---------------------------
+- It is the responsibility of the borrower to return books on or before the due date. 
+- Late returns may result in fines.
+
+OVERDUE FINES:
+---------------------------
+- Overdue fines are $0.50 per day for each overdue book.
+
+LOST OR DAMAGED BOOKS:
+---------------------------
+- Borrowers are responsible for the safekeeping of borrowed items. 
+- Lost or damaged books must be replaced or paid for.
+
+---------------------------
+HOW TO BORROW:
+---------------------------
+1. Members must register their borrow in the library system.
+2. The librarian will verify your borrow registration and check out the books for you.
+
+CHECKING BORROWING HISTORY:
+---------------------------
+- Members can check their borrowing history in the "Check Borrowing History" menu.
