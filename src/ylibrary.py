@@ -9,21 +9,25 @@ import os
 # LOGIN & REGISTRATION
 # --------------------------------------------------------------------------
 def registration(memberdbase):
-    """_summary_
+    """Register a new library member.
 
     Args:
-        memberdbase (_type_): _description_
-    """    
+        memberdbase (dict): A dictionary containing member information with member IDs as keys.
+
+    Returns:
+        None
+    """ 
     while True: 
+        # input new member data
         name = pyip.inputStr('\nEnter your username: ')
         name = name.lower()
         email = pyip.inputEmail('Enter your email address: ')
         email = email.lower()
         phone_num = pyip.inputInt('Enter your phone number: ')
         hold = 0
-
+        # initialize a variable to check for duplicates
         duplicate = False 
-
+        # check for duplicates in the member database
         for data in memberdbase.values():
             if data[1].lower() == name:
                 print('This username is already registered.')
@@ -38,17 +42,19 @@ def registration(memberdbase):
                 duplicate = True
 
         if not duplicate:
+            # generate a unique member ID
             member_id = generate_id(memberdbase, code='M')
+            # create default password based on the member ID
             true_pass = '123456' + member_id[1:]
-
             data = [member_id, name.capitalize(), phone_num, email, hold]
             memberdbase.update({f'{member_id}': data})
+            # append the new member's information to a CSV file
             with open('ylibrary\data\member.csv', mode='a', newline='') as file:
                     writer = csv.writer(file, delimiter = ';')
                     writer.writerow(data)
 
             clear_screen() 
-
+            # display a registration sucess
             print('\nCONGRATULATION!')
             print('Your registration is successful')
             print(f'>>>  Your member ID is : {member_id}')
@@ -58,7 +64,15 @@ def registration(memberdbase):
             break
 
 def generate_id(memberdbase, code):
+    """Generate a unique member ID
 
+    Args:
+        memberdbase (dict)
+        code (str): A prefix code for the member ID
+
+    Returns:
+        str: a unique member ID
+    """    
     max_id = 0
 
     for i in memberdbase.keys():
@@ -70,6 +84,9 @@ def generate_id(memberdbase, code):
     return new_id
 
 def admin_login():
+    """
+    Perform admin login
+    """    
     while True:
         true_pass = 'abcdefg'
         password = pyip.inputPassword("Enter your password: ").lower()
@@ -82,6 +99,9 @@ def admin_login():
             return identity, id
         
 def member_login(memberdbase):
+    """
+    Perform member login
+    """   
     while True:
         found = False
 

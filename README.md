@@ -22,12 +22,6 @@ It allows members to search for books, borrow them, and automatically records pe
 
 1. **Database Management**: Access the admin tools to manage the database, add new books, update book information, etc.
 
-## Installation
-
-1. Clone the repository: `git clone https://github.com/yourusername/library-borrowing-system.git`
-2. Install dependencies: `npm install` (or `pip install -r requirements.txt` for Python projects).
-3. Run the application: `npm start` (or `python app.py`).
-
 ## Contributing
 
 If you'd like to contribute to this project, please follow these steps:
