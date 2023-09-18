@@ -39,9 +39,11 @@ The Library Borrowing System is a CRUD-based program that facilitates the borrow
 
 ## Dependencies
 
-PyInputPlus==0.2.12
-tabulate==0.9.0
-datetime==3.11.5
+1. ```PyInputPlus==0.2.12```
+
+2. ```tabulate==0.9.0```
+
+3. ```datetime==3.11.5```
 
 ## Usage
 
@@ -54,6 +56,7 @@ datetime==3.11.5
 
 ## Project Organization
 
+```
 ├── README.md          <- The top-level README for developers using this project.
 │
 ├── data               <- book database, member database, borrowing database
@@ -64,6 +67,7 @@ datetime==3.11.5
 │                         generated with `pip freeze > requirements.txt`
 │
 └── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+```
 
 ## Contributing
 
