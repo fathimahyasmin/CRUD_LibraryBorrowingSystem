@@ -8,7 +8,6 @@ import os
 
 # LOGIN & REGISTRATION
 # --------------------------------------------------------------------------
-
 def registration(memberdbase):
     while True: 
         name = pyip.inputStr('Enter your username: ')
@@ -41,7 +40,7 @@ def registration(memberdbase):
 
             data = [member_id, name.capitalize(), phone_num, email, hold]
             memberdbase.update({f'{member_id}': data})
-            with open('ylibrary\member.csv', mode='a', newline='') as file:
+            with open('ylibrary\data\member.csv', mode='a', newline='') as file:
                     writer = csv.writer(file, delimiter = ';')
                     writer.writerow(data)
 
@@ -82,7 +81,6 @@ def member_login(memberdbase):
         found = False
 
         member_id = pyip.inputStr("Enter your member ID: ").lower()
-
         password = pyip.inputPassword("Enter your password: ")
         true_pass = '123456' + member_id[1:]
 
@@ -176,15 +174,13 @@ Enter the menu number: ''')
         
         found = False
         attributes = []
-        
+    
         if searchOpts == 1:
             title = pyip.inputStr('Enter the title: ').lower()
-
             for id, attribute in database.items():
                 if title == database[id][1].lower():
                     attributes.append(attribute)
                     found = True
-    
             if not found:
                 print(f'Sorry, {title.title()} was not found in our database')
             else:
@@ -193,51 +189,196 @@ Enter the menu number: ''')
 
         elif searchOpts == 2:
             author = pyip.inputStr('Enter the author name: ').lower()
-
             for id, attribute in database.items():
                 if author == database[id][2].lower():
                     attributes.append(attribute)
                     found = True
-    
             if not found:
                 print(f'Sorry, {author.title()} was not found in our database')
             else:
                 partial_show(attributes, database)
                 stay()
+
         elif searchOpts == 3:
             category = pyip.inputStr('Enter the category: ').lower()
-
             for id, attribute in database.items():
                 if category == database[id][3].lower():
                     attributes.append(attribute)
                     found = True
-    
             if not found:
                 print(f'Sorry, {category} was not found in our database')
             else:
                 partial_show(attributes, database)
                 stay()
+
         elif searchOpts == 4:
             isbn = pyip.inputStr('Enter the ISBN number: ')
-
             for id, attribute in database.items():
                 if isbn == database[id][4]:
                     attributes.append(attribute)
                     found = True
-    
             if not found:
                 print(f'Sorry, {isbn} was not found in our database')
             else:
                 partial_show(attributes, database)
+
         elif searchOpts == 5:
             show(database)
             stay()
+
         elif searchOpts == 6:
+            break
+# Borrow()
+# --------------------------------------------------------------------------
+
+def borrow(database, memberdbase, borrowdb, identity, user_id):
+
+    if identity != 'member':
+        print('This menu is for member only.')
+        return
+    
+    while True:
+        print('-------- BOOK BORROWING --------')
+        print('''
+Choose the menu:
+1. Borrow Books
+2. Read Borrowing Policy
+3. Check Borrowing History
+4. Exit''')
+        sub_choice = pyip.inputInt('Enter the number: ')
+
+        #clear_screen()
+             
+        if sub_choice == 1:
+            print('\nBorrowing Quota Status: ')
+            print('-----------------------------')
+            # check hold
+            hold = memberdbase[user_id][4]
+            remain = 3 - hold
+    
+            if remain == 0:
+                print('\nSorry, you\'ve reached the borrowing limit')
+                print('You can borrow another book next time!')
+                break
+            else:
+                print(f'\nYour available borrowing quota is {remain}')
+
+            #clear_screen()
+
+            while True: 
+                book_id = pyip.inputStr('\nEnter the book ID you want to borrow: ').capitalize()
+                if book_id not in database:
+                    print(f'\nBook ID {book_id} not found in database.')
+                else: 
+                    #cek stock
+                    data = database[book_id]
+                    stock = data[6]
+                    if stock == 0:
+                        print('\nSorry, your book isn\'t available')
+                        print(f'The book stock is {stock}')
+
+                    else: 
+                        print('\nYey! Your book is available')
+                        print(f'The remaining stock is {stock}')
+
+                        confirm_save = pyip.inputYesNo('\nDo you want to continue borrowing? (yes/no)') 
+                        if confirm_save == 'yes':
+                            data[6] -= 1
+                            memberdbase[user_id][4] += 1
+
+                            with open('ylibrary\data\libdata.csv', 'w', newline='') as file:
+                                writer = csv.writer(file, delimiter=';')
+                                writer.writerows(database.values())
+
+                            with open('ylibrary\data\member.csv', 'w', newline='') as file:
+                                writer = csv.writer(file, delimiter=';')
+                                writer.writerows(memberdbase.values())
+
+                            borrow_date = datetime.now()
+                            return_date = borrow_date + timedelta(days=7)
+                            entry_num = generate_id(borrowdb, code='C')
+
+                            cart = [entry_num, user_id, book_id, borrow_date, return_date]
+
+                            with open('ylibrary\data\databorrow.csv', 'a', newline='') as file:
+                                writer = csv.writer(file, delimiter = ';')
+                                writer.writerow(cart)
+                            
+                            print('Yey! Borrowing successful!')
+                            print('Check the borrowing status in "Check Borrowing History" menu')
+                            stay()
+                            break
+                        else: 
+                            break
+        
+        elif sub_choice == 2:
+            clear_screen()
+            with open('ylibrary\libpolicy.txt', 'r') as file:
+                print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+                
+                content = file.read()
+                print(content)
+                
+                print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+            stay()
+        elif sub_choice == 3:
+            print('-------- BORROWING HISTORY --------')
+            
+            data = []
+            header = ['Member ID', 'Name', 'Book Title', 'Borrow Date', 'Return Date']
+
+            for j in borrowdb.values():
+                if j[1] == user_id:
+                    name = memberdbase[j[1]][1]
+                    title = database[j[2]][1]
+                    borrowdate = j[3][:10]
+                    returndate = j[4][:10]
+                    compile = [user_id, name, title, borrowdate, returndate]
+                    data.append(compile)
+            print(tabulate.tabulate(data, header, tablefmt='grid'))
+            stay()
+        elif sub_choice == 4:
+            break     
+# --------------------------------------------------------------------------
+# DATABASE MANAGEMENT
+# --------------------------------------------------------------------------
+def database_management(database, memberdbase, identity):
+
+    if identity != 'admin':
+        print('This menu is for admin only.')
+        return
+    
+    while True: 
+        print('-------- DATABASE MANAGEMENT SYSTEM --------')
+        print('''          
+Menu:
+1. Add book data
+2. Update book data
+3. Delete book data
+4. Search member data
+5. Update member data
+6. Delete member data             
+7. Exit
+        ''')
+        choice = pyip.inputStr('Enter the number: ')
+
+        if choice == '1':
+            add(database)
+        elif choice == '2':
+            update(database)
+        elif choice == '3':
+            delete(database)
+        elif choice == '4':
+            search_member(memberdbase)
+        elif choice == '5':
+            update_member(memberdbase)
+        elif choice == '6':
+            delete_member(memberdbase)
+        elif choice == '7':
             break
 
 # Add()
 # --------------------------------------------------------------------------
-
 def add(database, identity):
 
     if identity != 'admin':
@@ -266,9 +407,8 @@ Choose the menu:
             data = [book_id, title.title(), authors.title(), category, isbn, publisher.title(), stock]
 
             save = pyip.inputYesNo("Do you want to save this data? (yes/no): ")
-
             if save == 'yes':
-                with open('ylibrary\libdata.csv', mode='a', newline='\n') as file:
+                with open('ylibrary\data\libdata.csv', mode='a', newline='\n') as file:
                     writer = csv.writer(file, delimiter = ';')
                     writer.writerow(data)
                 print("The input was successful.")
@@ -280,7 +420,6 @@ Choose the menu:
 
 # Update()
 # --------------------------------------------------------------------------
-
 def update(database, identity):
     
     if identity != 'admin':
@@ -346,7 +485,7 @@ Select which data you want to update:
                 confirm_save = pyip.inputYesNo('Do you want to save this update? (yes/no): ')
 
                 if confirm_save == 'yes':
-                    with open('ylibrary\libdata.csv', 'w', newline='') as file:
+                    with open('ylibrary\data\libdata.csv', 'w', newline='') as file:
                         writer = csv.writer(file, delimiter=';')
                         writer.writerows(database.values())
                     print('Change saved successfully')
@@ -360,7 +499,6 @@ Select which data you want to update:
 
 # Delete()
 # --------------------------------------------------------------------------
-
 def delete(database, identity):
 
     if identity != 'admin':
@@ -380,7 +518,6 @@ Choose the menu:
         if sub_choice == 1:
             while True: 
                 book_id = pyip.inputStr('\nEnter the book ID you want to delete: ').capitalize()
-            
                 if book_id not in database:
                     print(f'Book ID {book_id} not found in database.')
                 else: 
@@ -390,137 +527,19 @@ Choose the menu:
 
             while True:
                 confirm = pyip.inputYesNo("Do you want to continue delete? (yes/no): ")
-
                 if confirm == 'yes': 
                     del database[book_id]
                     print('Data successfully deleted')
-
-                    with open('ylibrary\libdata.csv', 'w', newline='') as file:
+                    with open('ylibrary\data\libdata.csv', 'w', newline='') as file:
                         writer = csv.writer(file, delimiter=';')
                         writer.writerows(database.values())
                     break
-
                 else:
                     print("Deletion cancelled. No changes were made.")
                     break
-       
+
         elif sub_choice == 2:
             break
-
-# Borrow()
-# --------------------------------------------------------------------------
-
-def borrow(database, memberdbase, borrowdb, identity, user_id):
-
-    if identity != 'member':
-        print('This menu is for member only.')
-        return
-    
-    while True:
-        print('-------- BOOK BORROWING --------')
-        print('''
-Choose the menu:
-1. Borrow Books
-2. Read Borrowing Policy
-3. Check Borrowing History
-4. Exit''')
-        sub_choice = pyip.inputInt('Enter the number: ')
-
-        #clear_screen()
-             
-        if sub_choice == 1:
-            print('\nBorrowing Quota Status: ')
-            print('-----------------------------')
-            # check hold
-            hold = memberdbase[user_id][4]
-            remain = 3 - hold
-    
-            if remain == 0:
-                print('\nSorry, you\'ve reached the borrowing limit')
-                print('You can borrow another book next time!')
-                break
-            else:
-                print(f'\nYour available borrowing quota is {remain}')
-
-            #clear_screen()
-
-            while True: 
-                book_id = pyip.inputStr('\nEnter the book ID you want to borrow: ').capitalize()
-                if book_id not in database:
-                    print(f'\nBook ID {book_id} not found in database.')
-                else: 
-                    #cek stock
-                    data = database[book_id]
-                    stock = data[6]
-                    if stock == 0:
-                        print('\nSorry, your book isn\'t available')
-                        print(f'The book stock is {stock}')
-
-                    else: 
-                        print('\nYey! Your book is available')
-                        print(f'The remaining stock is {stock}')
-
-                        confirm_save = pyip.inputYesNo('\nDo you want to continue borrowing? (yes/no)') 
-                        if confirm_save == 'yes':
-                            data[6] -= 1
-                            memberdbase[user_id][4] += 1
-
-                            with open('ylibrary\libdata.csv', 'w', newline='') as file:
-                                writer = csv.writer(file, delimiter=';')
-                                writer.writerows(database.values())
-
-                            with open('ylibrary\member.csv', 'w', newline='') as file:
-                                writer = csv.writer(file, delimiter=';')
-                                writer.writerows(memberdbase.values())
-
-                            borrow_date = datetime.now()
-                            return_date = borrow_date + timedelta(days=7)
-
-                            entry_num = generate_id(borrowdb, code='C')
-
-                            cart = [entry_num, user_id, book_id, borrow_date, return_date]
-
-                            with open('ylibrary\databorrow.csv', 'a', newline='') as file:
-                                writer = csv.writer(file, delimiter = ';')
-                                writer.writerow(cart)
-                            
-                            print('Yey! Borrowing successful!')
-                            print('Check the borrowing status in "Check Borrowing History" menu')
-                            stay()
-                            break
-                        else: 
-                            break
-        
-        elif sub_choice == 2:
-            clear_screen()
-            with open('ylibrary\libpolicy.txt', 'r') as file:
-                print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-                
-                content = file.read()
-                print(content)
-                
-                print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-            stay()
-        elif sub_choice == 3:
-            print('-------- BORROWING HISTORY --------')
-            
-            data = []
-            header = ['Member ID', 'Name', 'Book Title', 'Borrow Date', 'Return Date']
-
-            for j in borrowdb.values():
-                if j[1] == user_id:
-                    name = memberdbase[j[1]][1]
-                    title = database[j[2]][1]
-                    borrowdate = j[3][:10]
-                    returndate = j[4][:10]
-                    compile = [user_id, name, title, borrowdate, returndate]
-                    data.append(compile)
-
-            print(tabulate.tabulate(data, header, tablefmt='grid'))
-            stay()
-
-        elif sub_choice == 4:
-            break     
 
 # search_member()
 # --------------------------------------------------------------------------
@@ -540,27 +559,26 @@ Enter the menu number: ''')
         
         if searchOpts == 1:
             user_id = pyip.inputStr('Enter the member id: ').lower()
-
             for id, attribute in memberdbase.items():
                 if user_id == memberdbase[id][0].lower():
                     attributes.append(attribute)
                     found = True
-    
+
             if not found:
                 print(f'{user_id.capitalize()} was not found in database')
             else:
                 partial_show(attributes, memberdbase)
                 stay()
+
         elif searchOpts == 2:
             show(memberdbase)
             stay()
         elif searchOpts == 3:
             break
-        
+
 # update_member()
 # --------------------------------------------------------------------------
 def update_member(memberdbase):
-
     while True:
         print('-------- UPDATE MEMBER DATA --------')
         print('''
@@ -572,7 +590,6 @@ Choose the menu:
         if sub_choice == 1:
             while True: 
                 member_id = pyip.inputStr('\nEnter the member ID to update: ').capitalize()
-                
                 if member_id not in memberdbase:
                     print(f'Member ID {member_id} not found in database.')
                 else: 
@@ -582,7 +599,6 @@ Choose the menu:
             
             while True:
                 confirm = pyip.inputYesNo("Do you want to continue update? (yes/no): ")
-
                 if confirm == 'no':
                     break
                 else: 
@@ -593,8 +609,8 @@ Select which data you want to update:
 3. Email
 4. Hold
         ''')
+                    
                 updateOpts = pyip.inputStr('Enter the number: ')
-        
                 if updateOpts == '1':
                     newName = pyip.inputStr('\nEnter new name: ')
                     data[1] = newName.title()
@@ -611,7 +627,7 @@ Select which data you want to update:
                 confirm_save = pyip.inputYesNo('Do you want to save this update? (yes/no): ')
 
                 if confirm_save == 'yes':
-                    with open('ylibrary\member.csv', 'w', newline='') as file:
+                    with open('ylibrary\data\member.csv', 'w', newline='') as file:
                         writer = csv.writer(file, delimiter=';')
                         writer.writerows(memberdbase.values())
                     print('Change saved successfully')
@@ -620,9 +636,10 @@ Select which data you want to update:
                 else: 
                     print("The input was not saved.")
                     break
+
         elif sub_choice == 2:
             break
-
+        
 # delete_member()
 # --------------------------------------------------------------------------
 def delete_member(memberdbase):
@@ -639,7 +656,6 @@ Choose the menu:
         if sub_choice == 1:
             while True: 
                 member_id = pyip.inputStr('\nEnter the member ID you want to delete: ').capitalize()
-            
                 if member_id not in memberdbase:
                     print(f'Member ID {member_id} not found in database.')
                 else: 
@@ -649,57 +665,16 @@ Choose the menu:
 
             while True:
                 confirm = pyip.inputYesNo("Do you want to continue delete? (yes/no): ")
-
                 if confirm == 'yes': 
                     del memberdbase[member_id]
                     print('Data successfully deleted')
-
-                    with open('ylibrary\member.csv', 'w', newline='') as file:
+                    with open('ylibrary\data\member.csv', 'w', newline='') as file:
                         writer = csv.writer(file, delimiter=';')
                         writer.writerows(memberdbase.values())
                     break
-
                 else:
                     print("Deletion cancelled. No changes were made.")
                     break
-       
+
         elif sub_choice == 2:
-            break
-
-# DATABASE MANAGEMENT
-# --------------------------------------------------------------------------
-def database_management(database, memberdbase, identity):
-
-    if identity != 'admin':
-        print('This menu is for admin only.')
-        return
-    
-    while True: 
-        print('-------- DATABASE MANAGEMENT SYSTEM --------')
-        print('''          
-Menu:
-1. Add book data
-2. Update book data
-3. Delete book data
-4. Search member data
-5. Update member data
-6. Delete member data             
-7. Exit
-        ''')
-        
-        choice = pyip.inputStr('Enter the number: ')
-
-        if choice == '1':
-            add(database)
-        elif choice == '2':
-            update(database)
-        elif choice == '3':
-            delete(database)
-        elif choice == '4':
-            search_member(memberdbase)
-        elif choice == '5':
-            update_member(memberdbase)
-        elif choice == '6':
-            delete_member(memberdbase)
-        elif choice == '7':
             break

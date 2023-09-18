@@ -7,7 +7,7 @@ import ylibrary as ylib
 
 def book_db():
     try: 
-        with open('ylibrary\libdata.csv', 'r', newline='') as file:
+        with open('ylibrary\data\libdata.csv', 'r', newline='') as file:
             reader = csv.reader(file, delimiter=';')
             header = next(reader)
             database = {'column' : header}
@@ -22,7 +22,7 @@ def book_db():
 def member_db():
     try:
 
-        with open('ylibrary\member.csv', 'r', newline='') as file:
+        with open('ylibrary\data\member.csv', 'r', newline='') as file:
             reader = csv.reader(file, delimiter=';')
             header = next(reader)
             memberdbase = {'column' : header}
@@ -37,7 +37,7 @@ def member_db():
 def borrow_db(): 
     try:
 
-        with open('ylibrary\databorrow.csv', 'r', newline='') as file:
+        with open('ylibrary\data\databorrow.csv', 'r', newline='') as file:
             reader = csv.reader(file, delimiter=';')
             header = next(reader)
             borrowdb = {'column' : header}
