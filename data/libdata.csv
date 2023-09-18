@@ -1,6 +1,9 @@
 book_id;title;authors;category;ISBN;publisher;stock
 B1;Harry Potter and the Philosopher's Stone;J.K. Rowling;fantacy;9380047238742;Mira Books;9
-B2;Repentance;Omar Suleiman;spiritual;93847200498;Tertib Publishing;4
-B4;Into The Wild;Jon Karakauer;biography;978014980998;Penguin Classic;10
-B5;Divergent;Stephenie Meyer;fantacy;98473849300384;Harvill Press;20
-B6;Gone Girl;Gillian Flynn;thriller;9837483948374;Penguin Books;3
+B2;Repentance;Omar Suleiman;spiritual;93847200498;Tertib Publishing;3
+B3;Into The Wild;Jon Krakauer;biography;9839403827345;Penguin Classic;4
+B4;The Maze Runner;James Dashner;dystopian;9405048504030;Penguin Classic;5
+B5;Democracy;Joan Didion;non-fiction;9800403827453;Vintage International;1
+B6;Life Of Pi;Yann Martel;adventure;9830047384008;Penguin Books;1
+B7;Animal Farm;George Orwell;fable;9838770003948;Random House;3
+B8;The Book Of Thief;Markus Zusak;fiction;9800037483235;Random House;3

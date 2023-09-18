@@ -1,12 +1,6 @@
-# CRUD_LibraryBorrowingSystem
-Capstone Project Modul 1 JSDC Purwadhika
-
-The Library Borrowing System is a software application designed to facilitate book searches, borrowings, and record-keeping for both library members and administrators. 
-It allows members to search for books, borrow them, and automatically records pertinent information such as book details, borrowing time, and remaining quotas.
-
 # Library Borrowing System
 Capstone Project Modul 1 JSDC Purwadhika
-## Overview
+
 The Library Borrowing System is a CRUD-based program that facilitates the borrowing process for both library members and administrators. It provides functionalities such as searching for books, registering borrowings, checking borrowing history, managing databases, and more.
 
 ## Features
@@ -24,26 +18,20 @@ The Library Borrowing System is a CRUD-based program that facilitates the borrow
 
 1. **Search:**
    - Allows administrators to search for books, members, and view borrowing histories.
-
 2. **Add Data:**
    - Enables administrators to add new books to the respective databases.
-
 3. **Update Data:**
    - Provides the ability to update existing book or member information.
-
 4. **Delete Data:**
    - Allows administrators to remove books or members from the databases.
-
 5. **Check Member Borrowing History:**
    - Provides access to view the borrowing history of all or specific members.
 
 ## Dependencies
 
-1. ```PyInputPlus==0.2.12```
-
-2. ```tabulate==0.9.0```
-
-3. ```datetime==3.11.5```
+PyInputPlus==0.2.12
+tabulate==0.9.0
+datetime==3.11.5
 
 ## Usage
 
@@ -56,7 +44,6 @@ The Library Borrowing System is a CRUD-based program that facilitates the borrow
 
 ## Project Organization
 
-```
 ├── README.md          <- The top-level README for developers using this project.
 │
 ├── data               <- book database, member database, borrowing database
@@ -67,7 +54,6 @@ The Library Borrowing System is a CRUD-based program that facilitates the borrow
 │                         generated with `pip freeze > requirements.txt`
 │
 └── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-```
 
 ## Contributing
 

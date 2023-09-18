@@ -453,6 +453,8 @@ Choose the menu:
 
             data = [book_id, title.title(), authors.title(), category, isbn, publisher.title(), stock]
 
+            clear_screen()
+
             save = pyip.inputYesNo("Do you want to save this data? (yes/no): ")
             if save == 'yes':
                 with open('ylibrary\data\libdata.csv', mode='a', newline='\n') as file:
@@ -522,9 +524,10 @@ Select which data you want to update:
                     new = new.title()
                 elif updateOpts == '6':
                     new = pyip.inputInt('\nEnter new stock: ')
-        
+                    
+                clear_screen()
                 confirm_save = pyip.inputYesNo('Do you want to save this update? (yes/no): ')
-
+                
                 if confirm_save == 'yes':
                     data[int(updateOpts)] = new
                     with open('ylibrary\data\libdata.csv', 'w', newline='') as file:
@@ -564,7 +567,7 @@ Choose the menu:
                     data = database[book_id]
                     print(tabulate.tabulate([data], headers=database['column'], tablefmt='grid'))
                     break
-
+            
             while True:
                 confirm = pyip.inputYesNo("Do you want to continue delete? (yes/no): ")
                 if confirm == 'yes': 
