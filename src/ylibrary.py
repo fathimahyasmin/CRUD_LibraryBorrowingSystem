@@ -9,6 +9,11 @@ import os
 # LOGIN & REGISTRATION
 # --------------------------------------------------------------------------
 def registration(memberdbase):
+    """_summary_
+
+    Args:
+        memberdbase (_type_): _description_
+    """    
     while True: 
         name = pyip.inputStr('\nEnter your username: ')
         name = name.lower()
@@ -161,23 +166,36 @@ def search(database):
     while True:
         clear_screen()
         print('---------- BOOK SEARCH ----------')
-        searchOpts = pyip.inputInt(lessThan=7, prompt='''
+        searchOpts = pyip.inputInt(lessThan=8, prompt='''
 Let's find your book!. 
 Here's some searching options:
                            
-1.  By Title
-2.  By Author
-3.  By Category
-4.  By ISBN               
-5.  See all books
-6.  Back to main menu                         
+1.  By Book ID
+2.  By Title
+3.  By Author
+4.  By Category
+5.  By ISBN               
+6.  See all books
+7.  Back to main menu                         
                            
 Enter the menu number: ''')
         
         found = False
         attributes = []
-    
+
         if searchOpts == 1:
+            book_id = pyip.inputStr('Enter the book_id: ').lower()
+            for id, attribute in database.items():
+                if book_id == database[id][0].lower():
+                    attributes.append(attribute)
+                    found = True
+            if not found:
+                print(f'Sorry, {book_id.capitalize()} was not found in our database')
+            else:
+                partial_show(attributes, database)
+                stay()
+    
+        elif searchOpts == 2:
             title = pyip.inputStr('Enter the title: ').lower()
             for id, attribute in database.items():
                 if title == database[id][1].lower():
@@ -189,7 +207,7 @@ Enter the menu number: ''')
                 partial_show(attributes, database)
                 stay()
 
-        elif searchOpts == 2:
+        elif searchOpts == 3:
             author = pyip.inputStr('Enter the author name: ').lower()
             for id, attribute in database.items():
                 if author == database[id][2].lower():
@@ -201,7 +219,7 @@ Enter the menu number: ''')
                 partial_show(attributes, database)
                 stay()
 
-        elif searchOpts == 3:
+        elif searchOpts == 4:
             category = pyip.inputStr('Enter the category: ').lower()
             for id, attribute in database.items():
                 if category == database[id][3].lower():
@@ -213,7 +231,7 @@ Enter the menu number: ''')
                 partial_show(attributes, database)
                 stay()
 
-        elif searchOpts == 4:
+        elif searchOpts == 5:
             isbn = pyip.inputStr('Enter the ISBN number: ')
             for id, attribute in database.items():
                 if isbn == database[id][4]:
@@ -224,11 +242,11 @@ Enter the menu number: ''')
             else:
                 partial_show(attributes, database)
 
-        elif searchOpts == 5:
+        elif searchOpts == 6:
             show(database)
             stay()
 
-        elif searchOpts == 6:
+        elif searchOpts == 7:
             break
 # Borrow()
 # --------------------------------------------------------------------------
@@ -347,7 +365,7 @@ Choose the menu:
 # --------------------------------------------------------------------------
 # DATABASE MANAGEMENT
 # --------------------------------------------------------------------------
-def database_management(database, memberdbase, identity):
+def database_management(database, memberdbase, identity, borrowdb):
 
     if identity != 'admin':
         print('This menu is for admin only.')
@@ -359,29 +377,35 @@ def database_management(database, memberdbase, identity):
         print('-------- DATABASE MANAGEMENT SYSTEM --------')
         print('''          
 Menu:
-1. Add book data
-2. Update book data
-3. Delete book data
-4. Search member data
-5. Update member data
-6. Delete member data             
-7. Exit
+1. Search book data
+2. Add book data
+3. Update book data
+4. Delete book data
+5. Check member data
+6. Update member data
+7. Delete member data
+8. Check borrowing data            
+9. Exit
         ''')
-        choice = pyip.inputStr('Enter the number: ')
+        choice = pyip.inputInt('Enter the number: ', lessThan=10)
 
-        if choice == '1':
+        if choice == 1:
+            search(database)
+        elif choice == 2:
             add(database)
-        elif choice == '2':
+        elif choice == 3:
             update(database)
-        elif choice == '3':
+        elif choice == 4:
             delete(database)
-        elif choice == '4':
+        elif choice == 5:
             search_member(memberdbase)
-        elif choice == '5':
+        elif choice == 6:
             update_member(memberdbase)
-        elif choice == '6':
+        elif choice == 7:
             delete_member(memberdbase)
-        elif choice == '7':
+        elif choice == 8:
+            show_borrowdb(borrowdb)
+        elif choice == 9:
             break
 
 # Add()
@@ -426,7 +450,6 @@ Choose the menu:
 # Update()
 # --------------------------------------------------------------------------
 def update(database):
-    
     while True:
         clear_screen()
         print('-------- UPDATE DATABASE --------')
@@ -465,28 +488,25 @@ Select which data you want to update:
                 updateOpts = pyip.inputStr('Enter the number: ')
         
                 if updateOpts == '1':
-                    newTitle = pyip.inputStr('\nEnter new title: ')
-                    data[1] = newTitle.title()
+                    new = pyip.inputStr('\nEnter new title: ')
+                    new = new.title()
                 elif updateOpts == '2':
-                    newAuthor = pyip.inputStr('\nEnter new Author: ')
-                    data[2] = newAuthor.title()
+                    new = pyip.inputStr('\nEnter new Author: ')
+                    new = new.title()
                 elif updateOpts == '3':
-                    newCategory = pyip.inputStr('\nEnter new Category: ')
-                    data[3] = newCategory
+                    new = pyip.inputStr('\nEnter new Category: ')
                 elif updateOpts == '4':
-                    newIsbn = pyip.inputInt('\nEnter new ISBN (13 digits): ')
-                    data[4] = newIsbn
+                    new = pyip.inputInt('\nEnter new ISBN (13 digits): ')
                 elif updateOpts == '5':
-                    newPub = pyip.inputStr('\nEnter new Publisher: ')
-                    data[5] = newPub.title()
+                    new = pyip.inputStr('\nEnter new Publisher: ')
+                    new = new.title()
                 elif updateOpts == '6':
-                    newStock = pyip.inputInt('\nEnter new stock: ')
-                    data[6] = newStock
+                    new = pyip.inputInt('\nEnter new stock: ')
         
                 confirm_save = pyip.inputYesNo('Do you want to save this update? (yes/no): ')
 
-                
                 if confirm_save == 'yes':
+                    data[int(updateOpts)] = new
                     with open('ylibrary\data\libdata.csv', 'w', newline='') as file:
                         writer = csv.writer(file, delimiter=';')
                         writer.writerows(database.values())
@@ -617,25 +637,19 @@ Select which data you want to update:
                 updateOpts = pyip.inputStr('Enter the number: ')
                 
                 if updateOpts == '1':
-                    newName = pyip.inputStr('\nEnter new name: ')
-                    
+                    new = pyip.inputStr('\nEnter new name: ')
+                    new = new.title()
                 elif updateOpts == '2':
-                    newPhone = pyip.inputInt('\nEnter new phone number: ')
-                    
+                    new = pyip.inputInt('\nEnter new phone number: ')  
                 elif updateOpts == '3':
-                    newEmail = pyip.inputEmail('\nEnter new email: ')
-                    
+                    new = pyip.inputEmail('\nEnter new email: ')
                 elif updateOpts == '4':
-                    newHold = pyip.inputInt('\nEnter new hold status: ')
+                    new = pyip.inputInt('\nEnter new hold status: ')
         
                 confirm_save = pyip.inputYesNo('Do you want to save this update? (yes/no): ')
-                print(confirm_save)
 
                 if confirm_save == 'yes':
-                    data[1] = newName.title()
-                    data[2] = newPhone
-                    data[3] = newEmail
-                    data[4] = newHold
+                    data[int(updateOpts)] = new
                     with open('ylibrary\data\member.csv', 'w', newline='') as file:
                         writer = csv.writer(file, delimiter=';')
                         writer.writerows(memberdbase.values())
@@ -647,9 +661,6 @@ Select which data you want to update:
                     print("The input was not saved.")
                     stay()
                     break
-
-                break
-
         elif sub_choice == 2:
             break
 
@@ -692,4 +703,38 @@ Choose the menu:
                     break
 
         elif sub_choice == 2:
+            break
+
+# show_borrowdb()
+# --------------------------------------------------------------------------
+def show_borrowdb(borrowdb):
+    while True:
+        clear_screen()
+        print('---------- BORROWING HISTORY ----------')
+        searchOpts = pyip.inputInt(lessThan=8, prompt='''
+                                                             
+1.  Search by member id
+2.  Show all
+3.  Exit                         
+                           
+Enter the menu number: ''')
+        
+        found = False
+        attributes = []
+
+        if searchOpts == 1:
+            member_id = pyip.inputStr('Enter the member id: ').lower()
+            for id, attribute in borrowdb.items():
+                if member_id == borrowdb[id][1].lower():
+                    attributes.append(attribute)
+                    found = True
+            if not found:
+                print(f'Sorry, {member_id.capitalize()} was not found')
+            else:
+                partial_show(attributes, borrowdb)
+                stay()
+        elif searchOpts == 2:
+            show(borrowdb)
+            stay()
+        elif searchOpts == 3:
             break

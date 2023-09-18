@@ -69,7 +69,7 @@ Menu:
             ylib.borrow(database, memberdbase, borrowdb, identity, user_id)
         elif choice == '3':
             ylib.clear_screen()
-            ylib.database_management(database, memberdbase, identity)
+            ylib.database_management(database, memberdbase, identity, borrowdb)
         elif choice == '4':
             ylib.clear_screen()
             print('----------------------------------')
