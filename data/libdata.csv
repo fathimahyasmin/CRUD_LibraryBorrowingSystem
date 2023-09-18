@@ -1,4 +1,6 @@
 book_id;title;authors;category;ISBN;publisher;stock
-B1;Harry Potter and the Philosopher's Stone;J.K. Rowling;fantacy;9380047238742;Mira Books;11
-B2;Repentance;Omar Suleiman;spiritual;93847200498;Tertib Publishing;17
+B1;Harry Potter and the Philosopher's Stone;J.K. Rowling;fantacy;9380047238742;Mira Books;9
+B2;Repentance;Omar Suleiman;spiritual;93847200498;Tertib Publishing;4
 B4;Into The Wild;Jon Karakauer;biography;978014980998;Penguin Classic;10
+B5;Divergent;Stephenie Meyer;fantacy;98473849300384;Harvill Press;77
+B6;Gone Girl;Gillian Flynn;thriller;9837483948374;Penguin Books;3
