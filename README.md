@@ -15,7 +15,6 @@ The Library Borrowing System is a CRUD-based program that facilitates the borrow
    - Allows members to view the books they've borrowed and check their due dates for return.
 
 ### For Administrators:
-
 1. **Search:**
    - Allows administrators to search for books, members, and view borrowing histories.
 2. **Add Data:**
@@ -28,13 +27,11 @@ The Library Borrowing System is a CRUD-based program that facilitates the borrow
    - Provides access to view the borrowing history of all or specific members.
 
 ## Dependencies
-
-PyInputPlus==0.2.12
-tabulate==0.9.0
-datetime==3.11.5
+```PyInputPlus==0.2.12```
+```tabulate==0.9.0```
+```datetime==3.11.5```
 
 ## Usage
-
 1. Decide your role as either a member or an administrator.
 2. If you're a member, log in with your credentials. If not, register to receive a member ID and password.
 3. In the main menu:
@@ -43,7 +40,7 @@ datetime==3.11.5
    - Use Database Management as an administrator to manage databases.
 
 ## Project Organization
-
+```
 ├── README.md          <- The top-level README for developers using this project.
 │
 ├── data               <- book database, member database, borrowing database
@@ -54,9 +51,9 @@ datetime==3.11.5
 │                         generated with `pip freeze > requirements.txt`
 │
 └── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+```
 
 ## Contributing
-
 If you'd like to contribute to this project, please follow these steps:
 
 1. Fork the repository.
