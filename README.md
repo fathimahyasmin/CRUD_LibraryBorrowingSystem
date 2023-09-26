@@ -1,5 +1,5 @@
 # Library Borrowing System
-Capstone Project Modul 1 JSDC Purwadhika
+Capstone Project Modul 1 JCDS Purwadhika
 
 The Library Borrowing System is a CRUD-based program that facilitates the borrowing process for both library members and administrators. It provides functionalities such as searching for books, registering borrowings, checking borrowing history, managing databases, and more.
 
